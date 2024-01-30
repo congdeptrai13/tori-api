@@ -50,7 +50,6 @@ abstract class EloquentRepository implements RepositoryInterface
     public function find($id)
     {
         $result = $this->_model->where('status', 1)->find($id);
-
         return $result;
     }
 

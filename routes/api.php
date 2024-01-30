@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\api\ArticleController;
+use App\Http\Controllers\api\CompanyController;
 use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\AuthController;
 use App\Models\User;
@@ -42,6 +44,20 @@ Route::prefix('user')->middleware(["auth:api"])->group(function () {
     Route::get("/all/{page}/{page_size}", [UserController::class, 'getUserWithPaginate']);
 });
 
+//route company
+Route::prefix('company')->middleware(["auth:api"])->group(function () {
+    Route::get("/all", [CompanyController::class, 'index']);
 
+    Route::post("/create", [CompanyController::class, 'create']);
+    Route::post("/update/{id}", [CompanyController::class, 'update']);
+    Route::delete("/delete/{id}", [CompanyController::class, "destroy"]);
+});
 
-// Route::get("hello-world", [UserController::class, 'index']);
+//route article
+Route::prefix('article')->middleware(["auth:api"])->group(function () {
+    Route::get("/all", [ArticleController::class, 'index']);
+
+    Route::post("/create", [ArticleController::class, 'create']);
+    Route::post("/update/{id}", [ArticleController::class, 'update']);
+    Route::delete("/delete/{id}", [ArticleController::class, "destroy"]);
+});

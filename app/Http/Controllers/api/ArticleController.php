@@ -3,28 +3,28 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Company;
-use App\Repositories\Company\CompanyEloquentRepository;
+use App\Repositories\Article\ArticleEloquentRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class CompanyController extends Controller
+class ArticleController extends Controller
 {
-
-    protected $companyRepository;
-    public function __construct(CompanyEloquentRepository $companyRepository)
+    protected $articleRepository;
+    public function __construct(ArticleEloquentRepository $articleRepository)
     {
-        $this->companyRepository = $companyRepository;
+        $this->articleRepository = $articleRepository;
     }
     /**
      * Display a listing of the resource.
      */
+
     public function index()
     {
-        $listCompany = $this->companyRepository->getAll();
+        //
+        $listArticle = $this->articleRepository->getAll();
         return response()->json([
             "message" => "success",
-            "data" => $listCompany
+            "data" => $listArticle
         ]);
     }
 
@@ -35,7 +35,7 @@ class CompanyController extends Controller
     {
         //
         $validator = validator($request->all(), [
-            'name' => 'required|string|min:6',
+            'content' => 'required|string|min:6',
         ]);
 
         if ($validator->fails()) {
@@ -45,7 +45,7 @@ class CompanyController extends Controller
             $request->all(),
             ["user_id" => Auth::id()]
         );
-        $result = $this->companyRepository->create($data);
+        $result = $this->articleRepository->create($data);
         if (!$result) {
             return response()->json(
                 ["message" => "failed"]
@@ -86,8 +86,9 @@ class CompanyController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        //
         //validate
-        $company = $this->companyRepository->find($id);
+        $company = $this->articleRepository->find($id);
         if (!$company) {
             return response()->json(
                 ["message" => "failed"],
@@ -102,14 +103,14 @@ class CompanyController extends Controller
         }
 
         $validator = validator($request->all(), [
-            'name' => 'required|string|min:6',
+            'content' => 'required|string|min:6',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
         // end validate
-        $result = $this->companyRepository->update($id, $request->all());
+        $result = $this->articleRepository->update($id, $request->all());
         return response()->json([
             "message" => "success",
             "data" => $result
@@ -123,14 +124,14 @@ class CompanyController extends Controller
     {
         //
         //validate
-        $company = $this->companyRepository->find($id);
-        if (!$company) {
+        $article = $this->articleRepository->find($id);
+        if (!$article) {
             return response()->json(
                 ["message" => "failed"],
                 400
             );
         }
-        $company->delete();
+        $article->delete();
         return response()->json([
             "message" => "success"
         ], 200);
